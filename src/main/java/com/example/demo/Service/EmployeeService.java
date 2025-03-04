@@ -26,21 +26,17 @@ public class EmployeeService {
                 .collect(Collectors.toList());
     }
     
-    // Mendapatkan karyawan berdasarkan ID
-    public EmployeeDTO getEmployeeById(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Karyawan dengan ID " + id + " tidak ditemukan"));
+    // Mendapatkan karyawan berdasarkan NIK
+    public EmployeeDTO getEmployeeByNik(Long nik) {
+        Employee employee = employeeRepository.findById(nik)
+                .orElseThrow(() -> new RuntimeException("Karyawan dengan NIK " + nik + " tidak ditemukan"));
         return convertToDTO(employee);
     }
     
     // Membuat karyawan baru
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
-        if (employeeDTO.getId() != null && employeeRepository.existsById(employeeDTO.getId())) {
-            throw new RuntimeException("Karyawan dengan ID " + employeeDTO.getId() + " sudah ada");
-        }
-        
-        if (employeeRepository.existsByEmail(employeeDTO.getEmail())) {
-            throw new RuntimeException("Email " + employeeDTO.getEmail() + " sudah digunakan");
+        if (employeeRepository.existsById(employeeDTO.getNik())) {
+            throw new RuntimeException("Karyawan dengan NIK " + employeeDTO.getNik() + " sudah ada");
         }
         
         Employee employee = convertToEntity(employeeDTO);
@@ -49,65 +45,50 @@ public class EmployeeService {
     }
     
     // Memperbarui data karyawan
-    public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
-        Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Karyawan dengan ID " + id + " tidak ditemukan"));
-        
-        // Check if email is being changed and if it's already in use
-        if (!existingEmployee.getEmail().equals(employeeDTO.getEmail()) && 
-                employeeRepository.existsByEmail(employeeDTO.getEmail())) {
-            throw new RuntimeException("Email " + employeeDTO.getEmail() + " sudah digunakan");
-        }
+    public EmployeeDTO updateEmployee(Long nik, EmployeeDTO employeeDTO) {
+        Employee existingEmployee = employeeRepository.findById(nik)
+                .orElseThrow(() -> new RuntimeException("Karyawan dengan NIK " + nik + " tidak ditemukan"));
         
         // Update properties
-        existingEmployee.setNama(employeeDTO.getNama());
-        existingEmployee.setEmail(employeeDTO.getEmail());
-        existingEmployee.setNomorTelepon(employeeDTO.getNomorTelepon());
+        existingEmployee.setNamaLengkap(employeeDTO.getNamaLengkap());
+        existingEmployee.setJenisKelamin(employeeDTO.getJenisKelamin());
         existingEmployee.setTanggalLahir(employeeDTO.getTanggalLahir());
-        existingEmployee.setJabatan(employeeDTO.getJabatan());
-        existingEmployee.setTanggalBergabung(employeeDTO.getTanggalBergabung());
-        existingEmployee.setGaji(employeeDTO.getGaji());
         existingEmployee.setAlamat(employeeDTO.getAlamat());
+        existingEmployee.setNegara(employeeDTO.getNegara());
         
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
         return convertToDTO(updatedEmployee);
     }
     
     // Menghapus karyawan
-    public void deleteEmployee(Long id) {
-        if (!employeeRepository.existsById(id)) {
-            throw new RuntimeException("Karyawan dengan ID " + id + " tidak ditemukan");
+    public void deleteEmployee(Long nik) {
+        if (!employeeRepository.existsById(nik)) {
+            throw new RuntimeException("Karyawan dengan NIK " + nik + " tidak ditemukan");
         }
-        employeeRepository.deleteById(id);
+        employeeRepository.deleteById(nik);
     }
     
     // Konversi Entity ke DTO
     private EmployeeDTO convertToDTO(Employee employee) {
         EmployeeDTO dto = new EmployeeDTO();
-        dto.setId(employee.getId());
-        dto.setNama(employee.getNama());
-        dto.setEmail(employee.getEmail());
-        dto.setNomorTelepon(employee.getNomorTelepon());
+        dto.setNik(employee.getNik());
+        dto.setNamaLengkap(employee.getNamaLengkap());
+        dto.setJenisKelamin(employee.getJenisKelamin());
         dto.setTanggalLahir(employee.getTanggalLahir());
-        dto.setJabatan(employee.getJabatan());
-        dto.setTanggalBergabung(employee.getTanggalBergabung());
-        dto.setGaji(employee.getGaji());
         dto.setAlamat(employee.getAlamat());
+        dto.setNegara(employee.getNegara());
         return dto;
     }
     
     // Konversi DTO ke Entity
     private Employee convertToEntity(EmployeeDTO dto) {
         Employee employee = new Employee();
-        employee.setId(dto.getId());
-        employee.setNama(dto.getNama());
-        employee.setEmail(dto.getEmail());
-        employee.setNomorTelepon(dto.getNomorTelepon());
+        employee.setNik(dto.getNik());
+        employee.setNamaLengkap(dto.getNamaLengkap());
+        employee.setJenisKelamin(dto.getJenisKelamin());
         employee.setTanggalLahir(dto.getTanggalLahir());
-        employee.setJabatan(dto.getJabatan());
-        employee.setTanggalBergabung(dto.getTanggalBergabung());
-        employee.setGaji(dto.getGaji());
         employee.setAlamat(dto.getAlamat());
+        employee.setNegara(dto.getNegara());
         return employee;
     }
 }

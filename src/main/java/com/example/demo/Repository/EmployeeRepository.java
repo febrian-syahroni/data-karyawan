@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    // Metode custom jika diperlukan
-    boolean existsByEmail(String email);
+    // Tambahkan method custom jika diperlukan
 }

@@ -14,28 +14,27 @@ import java.time.LocalDate;
 public class Employee {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "nik", nullable = false)
+    private Long nik;
     
-    @Column(nullable = false)
-    private String nama;
+    @Column(name = "nama_lengkap", nullable = false)
+    private String namaLengkap;
     
-    @Column(nullable = false, unique = true)
-    private String email;
-    
-    @Column(name = "nomor_telepon")
-    private String nomorTelepon;
+    @Column(name = "jenis_kelamin", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private JenisKelamin jenisKelamin;
     
     @Column(name = "tanggal_lahir")
     private LocalDate tanggalLahir;
     
-    @Column(nullable = false)
-    private String jabatan;
-    
-    @Column(name = "tanggal_bergabung")
-    private LocalDate tanggalBergabung;
-    
-    private Double gaji;
-    
+    @Column(name = "alamat", columnDefinition = "TEXT")
     private String alamat;
+    
+    @Column(name = "negara", nullable = false)
+    private String negara;
+    
+    public enum JenisKelamin {
+        LAKI_LAKI,
+        PEREMPUAN
+    }
 }
